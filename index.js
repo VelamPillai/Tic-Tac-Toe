@@ -12,7 +12,7 @@ const winningCombination =[
 // Introduction message for the Game
 const introMessage = ()=>{
     console.log(`             
-                   Game starts by just enter the position(from 0 to 8) as a Input 
+                   Game starts by just enter the position(from 1 to 9) as a Input 
 
                                   First Player starts as Player X
                                               And
@@ -25,31 +25,66 @@ const winningMessage = player => player === 'X'||'O' ?console.log(`        Playe
 
 
 // Game Cell - Template
-const gameCell = function(){
+const gameCell = function(cell){
     let k = 0;
+    
     console.log(`                   _____________________________________________`);
-    for(let i = 0;i<=2;i++, k+=2 ){     
-         //console.log(`      ____________|____________|____________`);
+    for(let i = 1;i<=3;i++, k+=2 ){     
+         
          console.log(`                  |             |               |               |`);
          console.log(`                  |             |               |               |`);
          console.log(`                  | [${i+k+0}]=        | [${i+k+1}] =         | [${i+k+2}] =         |`); 
          console.log(`                  |             |               |               |`);
          console.log(`                  |_____________|_______________|_______________|`);
-             
+     
+         
     }
    
 }
 
-const getInputCellPosition = function(){
-    let playerX = true;
-    let playerO = false;
-    let inputPos ='';
-    let inputArr =[];
-    for(let i=0;i<=9;i++){
-        inputPos = prompt('Enter Position (')
-        check 
+//  template for cell . It has status and value 
+
+class CellValue{
+    constructor(cellNo,cellValue){ 
+        this.cellNo=cellNo;
+        this.cellValue=cellValue;
+        this.cellFilledStatus = false; 
+        }
+}
+
+class CellArray {
+    constructor()
+    {  
+       this.cellArray = []; 
+    }
+    
+    fillCellValue = (val,pos) => {
+        const cell = new CellValue(pos,val);
+        cell.cellFilledStatus=true;
+        this.cellArray.push(cell);
     }
 }
 
+const displayGameCellWithValue= ()=> cell.forEach(element => gameCell(element));
+    
+});
+const cell = new CellArray();
+const getInputCellPosition = function(){    
+    let playerX = true;
+    let playerO = false;    
+    let inputPos ='';
+    let gameStatus = ''
+    let inputArr =[];
+    for(let i=1;i<=9;i++){
+        console.clear();
+        inputPos = prompt('Enter Position(1-9) : ');
+        i%2 ? cell.fillCellValue('X',inputPos):cell.fillCellValue('O',inputPos);  
+        displayGameCellWithValue();   
+    }
+   
+
 introMessage();
 gameCell();
+getInputCellPosition();
+
+//displayGameCellWithValue();
