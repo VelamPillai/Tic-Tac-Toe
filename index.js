@@ -20,15 +20,24 @@ const introMessage = ()=>{
                                `)
 }
 
+// Winning message for the game
 const winningMessage = player => player === 'X'||'O' ?console.log(`        Player${player} Won!!!!`):  console.log(`       Match Tie!!!!`); 
 
 
-
+// Game Cell - Template
 const gameCell = function(){
     let k = 0;
+    console.log(`                   _____________________________________________`);
     for(let i = 0;i<=2;i++, k+=2 ){     
-         console.log('\n','      [',i+k+0,'] =     [', i+k+1,'] =     [',i+k+2,'] =  ','\n');           
+         //console.log(`      ____________|____________|____________`);
+         console.log(`                  |             |               |               |`);
+         console.log(`                  |             |               |               |`);
+         console.log(`                  | [${i+k+0}]=        | [${i+k+1}] =         | [${i+k+2}] =         |`); 
+         console.log(`                  |             |               |               |`);
+         console.log(`                  |_____________|_______________|_______________|`);
+             
     }
+   
 }
 
 const getInputCellPosition = function(){
