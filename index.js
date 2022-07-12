@@ -1,7 +1,7 @@
+// Getting user Input through terminal
 const prompt = require("prompt-sync")();
 
 //  constant variable for Winning combination
-
 const winningCombination = [
   [1, 2, 3],
   [4, 5, 6],
@@ -18,20 +18,21 @@ const introMessage = () => {
   console.log(`             
                    Game starts by just enter the position(from 1 to 9) as a Input 
 
-                                  First Player starts as Player X
+                                  First Player starts as Player 1
                                               And
-                                  Second Player as Player O
+                                  Second Player as Player 2
                                `);
 };
 
 // Winning message for the game
-const winningMessage = (player) =>
-  (player === "X" || player === "O")
-    ? console.log(`                     Player - ${player} Won!!!!\n`)
+const winningMessage = (...player) =>
+  player[0] === player1 || player[0] === player2
+    ? console.log(
+        `                             ${player[1]}-(${player[0]}) Won!!!!\n`
+      )
     : console.log(`                     Match Tie!!!!\n`);
 
 // validate input - position should be any number between 1 and 9 and return the same number ,if not it should return the error message
-
 const validateInput = (num) =>
   num.length === 1 && /[\d]/.test(num)
     ? num
@@ -40,7 +41,7 @@ const validateInput = (num) =>
 
 // display
 
-// Game Cell - Template
+// Game Cell - Template-introduction
 const gameCell = function () {
   let k = 0;
 
@@ -52,63 +53,50 @@ const gameCell = function () {
       `                  |             |               |               |`
     ),
       console.log(
-        `                  |             |               |               |`
-      ),
-      console.log(
         `                  | [${i + k + 0}]=        | [${
           i + k + 1
         }] =         | [${i + k + 2}] =         |`
       ),
       console.log(
-        `                  |             |               |               |`
-      ),
-      console.log(
         `                  |_____________|_______________|_______________|`
       );
   }
+  console.log("\n");
 };
 
 //  class for Cell ---> template for cell . It has status and value
-
 class CellValue {
   constructor(cellNo, cellValue) {
     this.cellNo = cellNo;
     this.cellValue = cellValue;
-    this.cellFilledStatus = false;
   }
 }
 
-// class for CellArray
+// class for CellArray ---> array to store filled cell
 class CellArray {
   constructor() {
     this.cellArray = [];
   }
 
   // check the status of the cell ---> filled with user input or not
-
-  checkCellFilledStatus = (val, pos, status) => {
-    // !this.cellArray.length? this.fillCellValue(val, pos)      :
+  checkCellFilledStatus = (val, pos) => {
+    // check wether the cell is filled with User input or not(it is repeating the process till valid input is given)
     this.cellArray.some((element) => element.cellNo === pos)
       ? (console.log("This Cell is already filled"),
         this.checkCellFilledStatus(
           val,
-          Number(validateInput(prompt("Enter Position(1-9) : "))),
-          status
+          Number(validateInput(prompt("Enter Position(1-9) : ")))
         ))
-      : this.fillCellValue(val, pos, status);
+      : this.fillCellValue(val, pos);
   };
 
-  // display the game template with values and without values
+  // display the game template with user input values
   displayGameCellWithValue = (cell) => {
     let k = 0;
-
     console.log(
       `                   _____________________________________________`
     );
     for (let i = 0; i < 3; i++, k += 2) {
-      /* console.log(
-            `                  |             |               |               |`
-          ),*/
       console.log(
         `                  |             |               |               |`
       ),
@@ -117,9 +105,6 @@ class CellArray {
             cell[i + k + 1].cellValue
           }       |        ${cell[i + k + 2].cellValue}      |`
         ),
-        /* console.log(
-            `                  |             |               |               |`
-          ),*/
         console.log(
           `                  |_____________|_______________|_______________|`
         );
@@ -127,95 +112,100 @@ class CellArray {
     console.log("\n");
   };
 
-  // filling value of the cell
-  fillCellValue = (val, pos, status) => {
+  // filling value of the cell ---> create cell instance to fill the value of cell
+  fillCellValue = (val, pos) => {
     const cell = new CellValue();
     cell.cellNo = pos;
     cell.cellValue = val;
-    cell.cellFilledStatus = status;
-    //this.cellArray.length >= 9 ? (this.cellArray.unshift(cell),this.cellArray.pop()) : this.cellArray.push(cell)  ;
+    // splice ---> used to enter user input &&&&& push---> used to fill empty cell array
     this.cellArray.length >= 9
       ? this.cellArray.splice(pos - 1, 1, cell)
       : this.cellArray.push(cell);
-
+    //  after each user input the cell template will display with all new values
     console.clear();
   };
 
-  // check the value of the winning combination cells++++++++++++++++++++no need
-  /* checkCellValue = (winningCombination, cell) =>
-    cell
-      .filter((item) => winningCombination.includes(item.cellNo))
-      .every((element) => element.cellValue === cellValue); */
-
   // find the winner
   findTheWinner = (cell) => {
-    let result;
-  // to find the winning combination matched with user-input combination
+    // to find the winning combination matched with user-input combination
     let matchedWinning = winningCombination.filter((item) =>
       item.every((element) =>
         cell.map((item1) => item1.cellNo).includes(element)
       )
     );
 
-
-    // to find the cell values are same 
-     
-   return   matchedWinning.some(element =>
-  cell
-    .filter(item => element.includes(item.cellNo))
-    .every( element => element.cellValue === "X")) || matchedWinning.some(element =>
-      cell
-        .filter(item => element.includes(item.cellNo))
-        .every( element => element.cellValue === "O")) 
-
-          
-     
-        }
+    // to find the cell values are same
+    return (
+      matchedWinning.some((element) =>
+        cell
+          .filter((item) => element.includes(item.cellNo))
+          .every((element) => element.cellValue === player1)
+      ) ||
+      matchedWinning.some((element) =>
+        cell
+          .filter((item) => element.includes(item.cellNo))
+          .every((element) => element.cellValue === player2)
+      )
+    );
+  };
 }
 
 // creating instance of cellArray ---> It is a array holding cell instances
 const cell = new CellArray();
 
-// getting in put from players . 9 times inputs are given. Odd chances are for player X and all even chances are for player O
+// getting input from players . 9 times inputs are given. Odd chances are for player X and all even chances are for player O
 const getInputCellPosition = function () {
-  let playerX = true;
-  let playerO = false;
-  let inputPos = "";  
+  let inputPos = "";
   let inputArr = [];
   for (let i = 1; i <= 9; i++) {
-    inputPos = validateInput(prompt("Enter Position(1-9) : "));
+    i % 2
+      ? (inputPos = validateInput(
+          prompt(`Enter Position(1-9) for Player-1 (${player1}): `)
+        ))
+      : (inputPos = validateInput(
+          prompt(`Enter Position(1-9) for  Player-2 (${player2}): `)
+        ));
 
     i % 2
-      ? cell.checkCellFilledStatus("X", Number(inputPos), true)
-      : cell.checkCellFilledStatus("O", Number(inputPos), true);
-      introMessage();
+      ? cell.checkCellFilledStatus(player1, Number(inputPos))
+      : cell.checkCellFilledStatus(player2, Number(inputPos));
+    introMessage();
     cell.displayGameCellWithValue(cell.cellArray);
 
     // when i = 5 ---> check for the winner
     if (i >= 5) {
-      let result=cell.findTheWinner(cell.cellArray);      
-      if ( result ) {
-        i%2 ? winningMessage('X'): winningMessage('O')
+      let result = cell.findTheWinner(cell.cellArray);
+      if (result) {
+        i % 2
+          ? winningMessage(player1, "Player-1")
+          : winningMessage(player2, "Player-2");
         break;
       }
-      if(!result && i===9){        
+      if (!result && i === 9) {
         winningMessage();
         break;
       }
-      
     }
   }
-
-  
 };
-
 
 //  fill the cellArray with cellValue of cellValue=' ',cellPosition = 0 , status = false
 //for (let i = 0; i < 9; i++) cell.fillCellValue(" ", 0, false);
 for (let i = 0; i < 9; i++) cell.fillCellValue(" ", 0, false);
 
 introMessage();
-cell.displayGameCellWithValue(cell.cellArray);
+gameCell();
+
+let player1 = prompt(
+  "\nChoose the symbol for player1 ( O / X ):"
+).toUpperCase();
+
+let player2 = player1 === "X" ? "O" : "X";
+console.log(`\n                                   Player - 1 : ${player1}\n
+                                   Player - 2 : ${player2}\n
+`);
+
+//cell.displayGameCellWithValue(cell.cellArray);
 
 // getting input from the user .after getting each Input display cell.
 
