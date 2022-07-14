@@ -119,8 +119,8 @@ class CellArray {
     cell.cellValue = val;
     // splice ---> used to enter user input &&&&& push---> used to fill empty cell array
     this.cellArray.length >= 9
-      ? this.cellArray.splice(pos - 1, 1, cell)
-      : this.cellArray.push(cell);
+      ? this.cellArray.splice(pos - 1, 1, cell)//to create cell with user input
+      : this.cellArray.push(cell);//to create cell with(' ' ,0)
     //  after each user input the cell template will display with all new values
     console.clear();
   };
@@ -128,7 +128,7 @@ class CellArray {
   // find the winner
   findTheWinner = (cell) => {
     // to find the winning combination matched with user-input combination
-    let matchedWinning = winningCombination.filter((item) =>
+    let matchedWinning = winningCombination.filter((item) =>//filter method return matched winning combination
       item.every((element) =>
         cell.map((item1) => item1.cellNo).includes(element)
       )
@@ -155,10 +155,10 @@ const cell = new CellArray();
 
 // getting input from players . 9 times inputs are given. Odd chances are for player X and all even chances are for player O
 const getInputCellPosition = function () {
-  let inputPos = "";
-  let inputArr = [];
+  let inputPos = "";//variable to store position
+  let inputArr = [];//variable to store array of cell-values
   for (let i = 1; i <= 9; i++) {
-    i % 2
+    i % 2//odd turn for player1 and even turn for player2
       ? (inputPos = validateInput(
           prompt(`Enter Position(1-9) for Player-1 (${player1}): `)
         ))
@@ -166,21 +166,22 @@ const getInputCellPosition = function () {
           prompt(`Enter Position(1-9) for  Player-2 (${player2}): `)
         ));
 
-    i % 2
+    i % 2 //odd turn for player1 and even turn for player2
       ? cell.checkCellFilledStatus(player1, Number(inputPos))
       : cell.checkCellFilledStatus(player2, Number(inputPos));
+    
     introMessage();
-    cell.displayGameCellWithValue(cell.cellArray);
+    cell.displayGameCellWithValue(cell.cellArray);//after each input update game-layout
 
-    // when i = 5 ---> check for the winner
+    // when i = 5 ---> check for the winner 
     if (i >= 5) {
-      let result = cell.findTheWinner(cell.cellArray);
+      let result = cell.findTheWinner(cell.cellArray);// winner (O / X) or Match Tie
       if (result) {
         i % 2
           ? winningMessage(player1, "Player-1")
           : winningMessage(player2, "Player-2");
         break;
-      }
+        }  // if match is tie --> checkCellFilledStatus-result = false and no-of-turn=9 ----> call winningMessage function with no parameter
       if (!result && i === 9) {
         winningMessage();
         break;
@@ -190,27 +191,32 @@ const getInputCellPosition = function () {
 };
 
 //  fill the cellArray with cellValue of cellValue=' ',cellPosition = 0 , status = false
-//for (let i = 0; i < 9; i++) cell.fillCellValue(" ", 0, false);
-for (let i = 0; i < 9; i++) cell.fillCellValue(" ", 0, false);
+for (let i = 0; i < 9; i++) cell.fillCellValue(" ", 0);
+//cell.displayGameCellWithValue(cell.cellArray); //display empty cell 
 
+
+// ********into message for the game
 introMessage();
+
+//**********introduction for the Cell layout
 gameCell();
 
-let player1 = prompt(
+// **********Choosing player symbol
+let playerSymbol =()=> {let player = prompt(
   "\nChoose the symbol for player1 ( O / X ):"
-).toUpperCase();
-
+).toUpperCase();let p = (player=== 'O'||player==='X') ? player :(console.log('\nWrong Symbol!!! only from ->w O / X \n'),playerSymbol()); return p;}
+  /* let player1 =prompt(
+  "\nChoose the symbol for player1 ( O / X ):"
+  ).toUpperCase(); */
+ let player1 = playerSymbol();
 let player2 = player1 === "X" ? "O" : "X";
 console.log(`\n                                   Player - 1 : ${player1}\n
                                    Player - 2 : ${player2}\n
 `);
 
-//cell.displayGameCellWithValue(cell.cellArray);
-
-// getting input from the user .after getting each Input display cell.
-
+//********getting input from the user .validate-input(only numbers) and check-cell-Filled-status, After getting each Input - update & display cell with user Input.
 getInputCellPosition();
 
-//displayGameCellWithValue();
 
-cell.findTheWinner(cell.cellArray);
+
+
