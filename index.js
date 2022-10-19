@@ -22,7 +22,9 @@ const winningCombination = [
 
 // Introduction message for the Game
 const introMessage = () => {
-  console.log(`                           
+  console.log(`   
+                                         Tic-Tac-Toe   
+                                                              
                    Game starts by just enter the position(from 1 to 9) as a Input 
 
                                   First Player starts as Player 1
@@ -31,7 +33,7 @@ const introMessage = () => {
                                `);
 };
 let intId;
-//
+
 const anim = function () {
   const p = "Restart!!!";
   let index = 0;
